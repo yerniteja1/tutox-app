@@ -32,41 +32,44 @@ export default function SchoolSelector() {
             <Pressable
               key={school.id}
               onPress={() => setSelectedId(school.id)}
-              className={`flex-row items-start gap-3 bg-white rounded-xl p-4 border ${
-                isSelected ? "border-primary" : "border-gray-200"
+              className={`flex flex-col gap-2 w-full border rounded-xl p-5 ${
+                isSelected
+                  ? "border-primary bg-white shadow-sm"
+                  : "border-gray-200 bg-white"
               }`}
               style={
                 isSelected
                   ? {
                       shadowColor: "#6B21E8",
-                      shadowOffset: { width: 0, height: 0 },
-                      shadowOpacity: 0.15,
-                      shadowRadius: 6,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 8,
                       elevation: 3,
                     }
                   : {}
               }
             >
-              {/* Radio Button */}
-              <View
-                className={`w-5 h-5 rounded-full border-2 items-center justify-center mt-0.5 ${
-                  isSelected ? "border-primary" : "border-gray-300"
-                }`}
-              >
-                {isSelected && (
-                  <View className="w-2.5 h-2.5 rounded-full bg-primary" />
-                )}
-              </View>
-
-              {/* School Info */}
-              <View className="flex-1 gap-0.5">
-                <Text className="text-sm font-semibold text-gray-900">
+              {/* Top Row: Radio Button and School Name */}
+              <View className="flex-row items-center gap-3">
+                <View
+                  className={`w-5 h-5 rounded-full border-2 items-center justify-center ${
+                    isSelected ? "border-primary" : "border-gray-300"
+                  }`}
+                >
+                  {isSelected && (
+                    <View className="w-2.5 h-2.5 rounded-full bg-primary" />
+                  )}
+                </View>
+                <Text className="text-[15px] font-semibold text-gray-700 leading-none">
                   {school.name}
                 </Text>
-                <Text className="text-xs text-gray-400">
+              </View>
+
+              <View className="flex flex-col gap-1">
+                <Text className="text-[15px] font-medium text-gray-400 tracking-tight">
                   School ID: {school.id}
                 </Text>
-                <Text className="text-sm text-gray-700 mt-1">
+                <Text className="text-[15px] font-medium text-gray-600 leading-snug">
                   {school.address}
                 </Text>
               </View>
