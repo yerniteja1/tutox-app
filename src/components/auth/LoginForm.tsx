@@ -4,10 +4,13 @@ import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
+const OTP_LENGTH = 6;
+
 export default function LoginForm() {
   const router = useRouter();
   const [mobileNo, setMobileNo] = useState("");
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
+  const [error, setError] = useState("");
   const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const handleOtpChange = (value: string, index: number) => {
@@ -15,7 +18,7 @@ export default function LoginForm() {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    if (value && index < 5) {
+    if (value && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
@@ -27,6 +30,20 @@ export default function LoginForm() {
   };
 
   const handleSignIn = () => {
+    const isValidPhone = mobileNo.length === 10;
+    const isValidOtp = otp.every((digit) => digit !== "");
+
+    if (!isValidPhone) {
+      setError("Enter a valid 10-digit phone number");
+      return;
+    }
+
+    if (!isValidOtp) {
+      setError("Enter complete OTP");
+      return;
+    }
+
+    setError("");
     router.push("/select-school");
   };
 
@@ -57,7 +74,10 @@ export default function LoginForm() {
           placeholderTextColor="#9CA3AF"
           keyboardType="phone-pad"
           value={mobileNo}
-          onChangeText={setMobileNo}
+          onChangeText={(text) => {
+            setMobileNo(text);
+            if (error) setError("");
+          }}
         />
       </View>
 
@@ -74,7 +94,10 @@ export default function LoginForm() {
             keyboardType="numeric"
             secureTextEntry={true}
             value={digit}
-            onChangeText={(val) => handleOtpChange(val, index)}
+            onChangeText={(val) => {
+              handleOtpChange(val, index);
+              if (error) setError("");
+            }}
             onKeyPress={({ nativeEvent }) =>
               handleOtpKeyPress(nativeEvent.key, index)
             }
@@ -83,6 +106,10 @@ export default function LoginForm() {
         ))}
       </View>
 
+      {/* error */}
+      {error ? (
+        <Text className="text-red-500 text-sm text-center">{error}</Text>
+      ) : null}
       {/* Sign In Button */}
       <TouchableOpacity
         onPress={handleSignIn}
