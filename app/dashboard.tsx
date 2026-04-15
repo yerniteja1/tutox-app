@@ -1,4 +1,5 @@
 import {
+  mockCourses,
   mockInfoCards,
   mockStudent,
   mockTopIcons,
@@ -9,6 +10,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
+  Dimensions,
   Pressable,
   ScrollView,
   Text,
@@ -21,18 +23,18 @@ export default function DashboardPage() {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const maxBarValue = Math.max(...mockWeeklyPerformance.map((w) => w.value));
-
+  const { width } = Dimensions.get("window");
+  const CARD_WIDTH = width * 0.75;
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* ── Red Header ── */}
-        <View className="bg-red-500 pt-4 px-4 pb-6">
+        <View className="bg-red-500 pt-4 pl-4">
           {/* Top Icon Row */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            // Use snapToInterval to make the cards "lock" into place when scrolling
-            snapToInterval={96 + 16} // card width (96) + gap (16)
+            snapToInterval={96 + 16}
             decelerationRate="fast"
             contentContainerStyle={{ paddingHorizontal: 0, gap: 16 }}
             className="mb-6"
@@ -66,7 +68,7 @@ export default function DashboardPage() {
                     />
                   </View>
 
-                  {/* Label - Slightly larger text for the larger card */}
+                  {/* Label */}
                   <Text
                     numberOfLines={1}
                     className="text-[11px] font-bold text-gray-800 tracking-tight"
@@ -79,7 +81,18 @@ export default function DashboardPage() {
           </ScrollView>
 
           {/* Student Dropdown */}
-          <View className="flex-row items-center bg-white rounded-xl px-3 py-2.5 gap-2">
+        </View>
+        <View className="bg-red-500 px-4 pb-4 flex-row items-center gap-3">
+          {/* Menu Icon on the Left */}
+          <Pressable
+            onPress={() => console.log("Menu Pressed")}
+            className="bg-white p-2 rounded-full items-center justify-center shadow-sm"
+          >
+            <Ionicons name="menu-outline" size={28} />
+          </Pressable>
+
+          {/* Student Selection Bar */}
+          <View className="flex-1 flex-row items-center bg-white rounded-xl px-3 py-2.5 gap-2">
             <Ionicons name="person-circle-outline" size={22} color="#6B7280" />
             <Text className="flex-1 text-sm font-semibold text-gray-800">
               {mockStudent.name} - {mockStudent.class}
@@ -94,74 +107,46 @@ export default function DashboardPage() {
           </View>
         </View>
 
-        {/* ── Info Cards 2x2 Grid ── */}
-        <View className="px-4 mt-4">
-          <View className="flex-row gap-3 mb-3">
-            {mockInfoCards.slice(0, 2).map((card) => (
+        {/* ── Info Cards ── */}
+        <View className="px-4 mt-4 flex-row flex-wrap justify-between">
+          {mockInfoCards.map((card) => {
+            const isDark = card.bg === "#43157A";
+
+            return (
               <View
                 key={card.id}
-                className="flex-1 rounded-2xl p-4 gap-2"
-                style={{ backgroundColor: card.bg }}
+                className="w-[48%] rounded-3xl p-5 mb-4 gap-3 justify-between"
+                style={{ backgroundColor: card.bg, minHeight: 160 }}
               >
-                <Text className="text-xl">{card.icon}</Text>
+                {/* Icon Container */}
+                <View className="bg-white/20 w-10 h-10 rounded-full items-center justify-center">
+                  <Ionicons name={card.icon as any} size={20} color="white" />
+                </View>
+
+                <View className="gap-1">
+                  <Text
+                    className="text-base font-bold leading-5"
+                    style={{ color: isDark ? "white" : "#1C1C2E" }}
+                  >
+                    {card.title}
+                  </Text>
+                  <Text
+                    className="text-xs"
+                    style={{ color: isDark ? "#E2E8F0" : "#4B5563" }}
+                  >
+                    {card.subtitle}
+                  </Text>
+                </View>
+
                 <Text
-                  className="text-sm font-bold"
-                  style={{
-                    color: card.bg === "#3B2D8F" ? "white" : "#1C1C2E",
-                  }}
-                >
-                  {card.title}
-                </Text>
-                <Text
-                  className="text-xs"
-                  style={{
-                    color: card.bg === "#3B2D8F" ? "#CBD5E1" : "#374151",
-                  }}
-                >
-                  {card.subtitle}
-                </Text>
-                <Text
-                  className="text-sm font-bold"
+                  className="text-base font-bold"
                   style={{ color: card.tagColor }}
                 >
                   {card.tag}
                 </Text>
               </View>
-            ))}
-          </View>
-          <View className="flex-row gap-3">
-            {mockInfoCards.slice(2, 4).map((card) => (
-              <View
-                key={card.id}
-                className="flex-1 rounded-2xl p-4 gap-2"
-                style={{ backgroundColor: card.bg }}
-              >
-                <Text className="text-xl">{card.icon}</Text>
-                <Text
-                  className="text-sm font-bold"
-                  style={{
-                    color: card.bg === "#3B2D8F" ? "white" : "#1C1C2E",
-                  }}
-                >
-                  {card.title}
-                </Text>
-                <Text
-                  className="text-xs"
-                  style={{
-                    color: card.bg === "#3B2D8F" ? "#CBD5E1" : "#374151",
-                  }}
-                >
-                  {card.subtitle}
-                </Text>
-                <Text
-                  className="text-sm font-bold"
-                  style={{ color: card.tagColor }}
-                >
-                  {card.tag}
-                </Text>
-              </View>
-            ))}
-          </View>
+            );
+          })}
         </View>
 
         {/* ── Weekly Performance ── */}
@@ -174,7 +159,7 @@ export default function DashboardPage() {
               <View key={item.week} className="flex-1 items-center gap-1">
                 <Text className="text-xs text-gray-500">{item.value}%</Text>
                 <View
-                  className="w-full rounded-t-lg"
+                  className="w-8 rounded-t-lg"
                   style={{
                     height: (item.value / maxBarValue) * 120,
                     backgroundColor: item.color,
@@ -195,35 +180,48 @@ export default function DashboardPage() {
             </Text>
             <Ionicons name="chevron-forward" size={20} color="#6B7280" />
           </View>
-          {/* Placeholder cards */}
-          <View className="mt-3 gap-3">
-            {[1, 2].map((i) => (
+          {/* Horizontal Scroll Area */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ gap: 16 }}
+            className="mt-2"
+            style={{}}
+          >
+            {mockCourses.map((course) => (
               <View
-                key={i}
-                className="bg-white rounded-2xl p-4 flex-row items-center gap-3"
+                key={course.id}
+                className="rounded-sm overflow-hidden"
                 style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.06,
-                  shadowRadius: 4,
-                  elevation: 2,
+                  width: CARD_WIDTH,
+                  elevation: 4,
                 }}
               >
-                <View className="w-12 h-12 bg-primary/10 rounded-xl items-center justify-center">
-                  <Text className="text-2xl">🎓</Text>
-                </View>
-                <View className="flex-1">
-                  <Text className="text-sm font-semibold text-gray-800">
-                    Course Title {i}
+                {/* Full Image */}
+                <Image
+                  source={course.image}
+                  style={{ width: "100%", height: 180 }}
+                  resizeMode="cover"
+                />
+
+                {/* Content Area */}
+                <View className="py-4 gap-1">
+                  <Text
+                    className="text-lg font-bold text-[#1C1C2E]"
+                    numberOfLines={1}
+                  >
+                    {course.title}
                   </Text>
-                  <Text className="text-xs text-gray-400 mt-0.5">
-                    Free · 12 Lessons
+                  <Text
+                    className="text-sm text-gray-400 leading-5"
+                    numberOfLines={2}
+                  >
+                    {course.description}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={16} color="#9CA3AF" />
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
       </ScrollView>
     </SafeAreaView>

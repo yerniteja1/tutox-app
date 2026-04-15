@@ -9,36 +9,36 @@ export const mockInfoCards = [
     title: "English Class Test",
     subtitle: "Mon 21 January",
     tag: "Scheduled",
-    tagColor: "#F59E0B",
-    bg: "#3B2D8F",
-    icon: "📋",
+    tagColor: "#FBBF24",
+    bg: "#43157A",
+    icon: "book-outline",
   },
   {
     id: "2",
     title: "Transportation",
     subtitle: "At C4 by 7:20 AM",
     tag: "Bus No. 29",
-    tagColor: "#EF4444",
-    bg: "#F59E0B",
-    icon: "🚌",
+    tagColor: "#E11D48",
+    bg: "#FFCA40",
+    icon: "bus-outline",
   },
   {
     id: "3",
     title: "Attendance",
     subtitle: "89/100 Days",
     tag: "Present",
-    tagColor: "#F59E0B",
-    bg: "#F59E0B",
-    icon: "👆",
+    tagColor: "#43157A",
+    bg: "#FFCA40",
+    icon: "finger-print-outline",
   },
   {
     id: "4",
     title: "Upcoming Fee",
     subtitle: "28 January 2025",
     tag: "₹3850",
-    tagColor: "#F59E0B",
-    bg: "#3B2D8F",
-    icon: "₹",
+    tagColor: "#FFCA40",
+    bg: "#43157A",
+    icon: "cash-outline",
   },
 ];
 
@@ -52,6 +52,20 @@ export const mockWeeklyPerformance = [
   { week: "W7", value: 80, color: "#4ADE80" },
 ];
 
+export const mockCourses = [
+  {
+    id: "1",
+    title: "Let's Math Together course",
+    description: "We have positively disrupted our own …",
+    image: require("@/assets/images/course_image1.png"),
+  },
+  {
+    id: "2",
+    title: "Let's Math Together course",
+    description: "We have positively disrupted our own …",
+    image: require("@/assets/images/course_image2.png"),
+  },
+];
 export const mockTopIcons = [
   {
     id: "1",
