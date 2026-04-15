@@ -19,7 +19,7 @@ export default function SchoolSelector() {
     }
 
     setError("");
-    router.push("/dashboard");
+    router.push("/home");
   };
 
   return (

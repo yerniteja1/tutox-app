@@ -1,3 +1,4 @@
+import ContinueWatchingCard from "@/src/components/Layout/ContinueWatchingCard";
 import {
   mockCourses,
   mockInfoCards,
@@ -173,7 +174,7 @@ export default function DashboardPage() {
         </View>
 
         {/* ── Free Courses ── */}
-        <View className="px-4 mt-6 mb-8">
+        <View className="px-4 mt-6">
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-bold text-gray-900">
               Free Courses
@@ -222,6 +223,11 @@ export default function DashboardPage() {
               </View>
             ))}
           </ScrollView>
+        </View>
+
+        {/* Watching card */}
+        <View className="px-4 mb-2">
+          <ContinueWatchingCard />
         </View>
       </ScrollView>
     </SafeAreaView>

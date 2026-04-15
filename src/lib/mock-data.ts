@@ -12,3 +12,11 @@ export const mockSchools: School[] = [
     address: "842 Gulf Street Rosedale, NY 11422",
   },
 ];
+
+export const watchingCourse = {
+  id: "1",
+  title: "Lets Math Together",
+  subtitle: "Chapter 1",
+  image: require("@/assets/images/course_image1.png"),
+  progress: 0.75,
+};
