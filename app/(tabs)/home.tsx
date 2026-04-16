@@ -2,10 +2,10 @@ import ContinueWatchingCard from "@/src/components/Layout/ContinueWatchingCard";
 import {
   mockCourses,
   mockInfoCards,
-  mockStudent,
   mockTopIcons,
   mockWeeklyPerformance,
 } from "@/src/lib/mock-dashboard";
+import { useAuth } from "@/src/lib/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -26,6 +26,10 @@ export default function DashboardPage() {
   const maxBarValue = Math.max(...mockWeeklyPerformance.map((w) => w.value));
   const { width } = Dimensions.get("window");
   const CARD_WIDTH = width * 0.75;
+  const { loading, user, institution } = useAuth();
+  if (loading) {
+    return <Text style={{ padding: 20 }}>Loading...</Text>;
+  }
   return (
     <SafeAreaView className="flex-1 bg-gray-100" edges={["top"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -96,7 +100,7 @@ export default function DashboardPage() {
           <View className="flex-1 flex-row items-center bg-white rounded-xl px-3 py-2.5 gap-2">
             <Ionicons name="person-circle-outline" size={22} color="#6B7280" />
             <Text className="flex-1 text-sm font-semibold text-gray-800">
-              {mockStudent.name} - {mockStudent.class}
+              {user.name} - {institution.name}
             </Text>
             <Pressable onPress={() => setDropdownOpen(!dropdownOpen)}>
               <Ionicons
