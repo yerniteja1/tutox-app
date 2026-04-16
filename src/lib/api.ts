@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.1.35:3000";
+const BASE_URL = "http://192.168.1.35:5000";
 
 export const api = {
   async login(data: { mobileNo: string; password: string }) {

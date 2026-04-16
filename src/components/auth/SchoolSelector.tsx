@@ -1,25 +1,58 @@
-import { mockSchools } from "@/src/lib/mock-data";
+import { api } from "@/src/lib/api";
+import { auth } from "@/src/lib/auth";
 import { School } from "@/src/types";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
 export default function SchoolSelector() {
   const router = useRouter();
-
-  const [selectedId, setSelectedId] = useState<string | null>(
-    mockSchools[0]?.id ?? null,
-  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [schools, setSchools] = useState<School[]>([]);
   const [error, setError] = useState("");
+  useEffect(() => {
+    const load = async () => {
+      const data = await auth.getInstitutions();
 
-  const handleContinue = () => {
+      if (!data) {
+        router.replace("/login");
+        return;
+      }
+
+      setSchools(data);
+      if (data.length > 0) {
+        setSelectedId(data[0].id);
+      }
+    };
+
+    load();
+  }, [router]);
+
+  const handleContinue = async () => {
     if (!selectedId) {
       setError("Please select a school");
       return;
     }
 
-    setError("");
-    router.push("/home");
+    try {
+      setError("");
+
+      const token = await auth.getToken();
+
+      if (!token) {
+        router.replace("/login");
+        return;
+      }
+
+      const res = await api.selectInstitution(token, selectedId);
+
+      await auth.setToken(res.token);
+      await auth.clearInstitutions();
+
+      router.replace("/(tabs)/home");
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    }
   };
 
   return (
@@ -34,7 +67,7 @@ export default function SchoolSelector() {
 
       {/* School Cards */}
       <View className="gap-3">
-        {mockSchools.map((school: School) => {
+        {schools.map((school: School) => {
           const isSelected = selectedId === school.id;
 
           return (
@@ -81,7 +114,7 @@ export default function SchoolSelector() {
               {/* Details */}
               <View className="flex flex-col gap-1">
                 <Text className="text-[14px] text-gray-400">
-                  School ID: {school.id}
+                  School ID: {school.code}
                 </Text>
                 <Text className="text-[14px] text-gray-600">
                   {school.address}
