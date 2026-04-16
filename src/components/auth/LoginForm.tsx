@@ -1,4 +1,6 @@
 "use client";
+import { api } from "@/src/lib/api";
+import { auth } from "@/src/lib/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
@@ -29,7 +31,7 @@ export default function LoginForm() {
     }
   };
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     const isValidPhone = mobileNo.length === 10;
     const isValidOtp = otp.every((digit) => digit !== "");
 
@@ -43,8 +45,23 @@ export default function LoginForm() {
       return;
     }
 
-    setError("");
-    router.push("/select-school");
+    try {
+      setError("");
+
+      const password = otp.join("");
+
+      const res = await api.login({
+        mobileNo,
+        password,
+      });
+
+      await auth.setToken(res.token);
+      await auth.setInstitutions(res.institutions);
+
+      router.push("/select-school");
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    }
   };
 
   return (
